@@ -1,4 +1,4 @@
-import { NavAuthContainer, NavAuthLink } from "./AuthNav.styled";
+import { NavAuthContainer, NavAuthLink } from "./NavAuth.styled";
 
 const NavAuth = () => {
   return (

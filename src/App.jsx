@@ -1,35 +1,51 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
+
+import Layout from "../src/Components/Layout/Layout";
+import { RestrictedRoute } from "../src/Components/RestrictedRoute";
+import { useDispatch, useSelector } from "react-redux";
+import { selectIsRefreshing, selectToken } from "../src/redux/auth/selectors";
+import { refreshUser } from "../src/redux/auth/operations";
+import Home from "../src/Pages/Home/Home";
+import Register from "../src/Pages/Registration/Registration";
+import Login from "../src/Pages/LogIn/LogIn";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const dispatch = useDispatch();
+  const isRefreshing = useSelector(selectIsRefreshing);
+  const token = useSelector(selectToken);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token) {
+      dispatch(refreshUser());
+    } else {
+      navigate("/login");
+    }
+  }, [dispatch, token, navigate]);
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {isRefreshing ? (
+        <p>Fetching user data...</p>
+      ) : (
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route
+              path="login"
+              element={<RestrictedRoute component={Login} redirectTo="/" />}
+            />
+            <Route
+              path="register"
+              element={<RestrictedRoute component={Register} redirectTo="/" />}
+            />
+            <Route path="*" element={<Home />} />
+          </Route>
+        </Routes>
+      )}
     </>
-  )
+  );
 }
 
-export default App
+export default App;

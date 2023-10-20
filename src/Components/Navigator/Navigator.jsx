@@ -1,12 +1,12 @@
-import { StyledLink } from "../TopBar/TopBar.styled";
-import MyLogoIcon from "../assets/logo.svg";
+import { CustomNavLink } from "../TopBar/TopBar.styled";
+import MyLogoIcon from "../../assets/logo.svg";
 
 const Navigator = () => {
   return (
     <nav>
-      <StyledLink to="/">
+      <CustomNavLink to="/">
         <img src={MyLogoIcon} alt="My Logo" />
-      </StyledLink>
+      </CustomNavLink>
     </nav>
   );
 };
